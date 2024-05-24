@@ -4,18 +4,15 @@ canvas.width  = 400;
 canvas.height = 400;
 
 const bgColor = "#4488ee";
-
 const tileSize = 20;
-const mapPath = "map.txt";
-let map;
 
 init();
-async function init() {
-    map = await loadMap(mapPath);
+function init() {
     render();
 }
 
 function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderBg();
     renderTiles();
 }
@@ -41,15 +38,4 @@ function renderTiles() {
             }
         }
     }
-}
-
-async function loadFile(path) {
-    const response = await fetch(path);
-    const text = await response.text();
-    return text;
-}
-async function loadMap(path) {
-    const text = await loadFile(path);
-    const lines = text.split(/\r?\n/);
-    return lines;
 }
