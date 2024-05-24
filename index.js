@@ -7,7 +7,8 @@ canvas.addEventListener("mousemove", updateMousePos, false);
 const bgColor = "#4488ee";
 const tileSize = 20;
 
-let mouse = {x: 0, y: 0};
+const mouse  = {x: 0, y: 0};
+const camera = {x: 0, y: 0};
 let oldTimeStamp = 0;
 
 init();
@@ -21,7 +22,9 @@ function gameLoop(timeStamp) {
     const fps = Math.round(1/dt);
 
     update(dt);
-    render();
+    camera.x = mouse.x;
+    camera.y = mouse.y;
+    render(camera);
     renderFPS(fps);
     window.requestAnimationFrame(gameLoop);
 }
@@ -31,16 +34,23 @@ function update(dt) {
         return;
     }
 }
-function render() {
+function render(camera) {
+    ctx.save();
+    ctx.translate(-camera.x, -camera.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    renderBg();
+    renderBg(camera);
     renderTiles();
-    renderMouse();
+    ctx.restore();
 }
 
-function renderBg() {
+function renderBg(camera) {
     ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(
+        camera.x,
+        camera.y,
+        canvas.width,
+        canvas.height
+    );
 }
 function renderTiles() {
     ctx.fillStyle   = "#aa5555";
@@ -58,10 +68,6 @@ function renderTiles() {
             }
         }
     }
-}
-function renderMouse() {
-    ctx.fillStyle   = "white";
-    ctx.fillRect(mouse.x, mouse.y, 10, 10);
 }
 function renderFPS(fps) {
     ctx.font = "20px Arial";
