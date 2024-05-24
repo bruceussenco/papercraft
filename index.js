@@ -8,12 +8,29 @@ const bgColor = "#4488ee";
 const tileSize = 20;
 
 let mouse = {x: 0, y: 0};
+let oldTimeStamp = 0;
 
 init();
 function init() {
-    render();
+    gameLoop();
 }
 
+function gameLoop(timeStamp) {
+    const dt = (timeStamp - oldTimeStamp)/1000;
+    oldTimeStamp = timeStamp;
+    const fps = Math.round(1/dt);
+
+    update(dt);
+    render();
+    renderFPS(fps);
+    window.requestAnimationFrame(gameLoop);
+}
+function update(dt) {
+    if (!dt) {
+        console.log(dt);
+        return;
+    }
+}
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderBg();
@@ -46,10 +63,14 @@ function renderMouse() {
     ctx.fillStyle   = "white";
     ctx.fillRect(mouse.x, mouse.y, 10, 10);
 }
+function renderFPS(fps) {
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "#00ff88";
+    ctx.fillText("FPS: " + fps, 10, 30);
+}
 
 function updateMousePos(e) {
     var rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
-    console.log("(" + mouse.x + ", " + mouse.y + ")");
 }
