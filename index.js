@@ -9,9 +9,10 @@ const tileSize  = 20;
 const chunkSize = chunkTileCount * tileSize;
 
 const mouse  = {x: 0, y: 0};
-const camera = {x: 0, y: 0};
-const player = new Player(100, 100, 20, 40);
+const player = new Player(100, 100, 20, 40, 3);
 let oldTimeStamp = 0;
+
+let devMode = false;
 
 init();
 function init() {
@@ -24,7 +25,7 @@ function gameLoop(timeStamp) {
     const fps = Math.round(1/dt);
 
     update(dt);
-    render(camera);
+    render(player.camera);
     showFPS(fps);
     window.requestAnimationFrame(gameLoop);
 }
@@ -34,10 +35,21 @@ function update(dt) {
         return;
     }
 
-    let dir = 0;
-    if (pressedKeys.get('a')) dir -= 1;
-    if (pressedKeys.get('d')) dir += 1;
-    player.move(dir);
+    let moveX = 0;
+    let moveY = 0;
+    if (downKeys.get('w')) moveY -= 1;
+    if (downKeys.get('s')) moveY += 1;
+    if (downKeys.get('a')) moveX -= 1;
+    if (downKeys.get('d')) moveX += 1;
+
+    if (downKeys.get('g')) devMode = !devMode;
+    if (devMode) {
+        player.move(moveX, moveY);
+    } else {
+        player.walk(moveX);
+    }
+
+    player.update();
 }
 function render(camera) {
     ctx.save();
@@ -87,8 +99,9 @@ function renderChunk(chunk, offset) {
     }
 }
 function renderPlayer() {
-    ctx.fillStyle = "#2222ff";
+    ctx.fillStyle = "#2222ff"; ctx.strokeStyle = "#000000";
     ctx.fillRect(player.x, player.y, player.w, player.h);
+    ctx.strokeRect(player.x, player.y, player.w, player.h);
 }
 function showFPS(fps) {
     ctx.font = "20px Arial";
@@ -106,9 +119,9 @@ function updateMousePos(e) {
 ////////////////////////////////
 //////////// Input /////////////
 ////////////////////////////////
-const pressedKeys = new Map();
+const downKeys = new Map();
 
 document.addEventListener("keydown", onKeyDown);
 document.addEventListener("keyup", onKeyUp);
-function onKeyDown(e) { pressedKeys.set(e.key, true); }
-function onKeyUp(e) { pressedKeys.set(e.key, false); }
+function onKeyDown(e) { downKeys.set(e.key, true); }
+function onKeyUp(e) { downKeys.set(e.key, false); }
