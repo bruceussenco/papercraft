@@ -5,8 +5,9 @@ canvas.height = 400;
 canvas.addEventListener("mousemove", updateMousePos, false);
 
 const bgColor   = "#4488ee";
-const chunkSize = 16;
+const chunkTileCount = 16;
 const tileSize  = 20;
+const chunkSize = chunkTileCount * tileSize;
 
 const mouse  = {x: 0, y: 0};
 const camera = {x: 0, y: 0};
@@ -40,7 +41,7 @@ function render(camera) {
     ctx.translate(-camera.x, -camera.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderBg(camera);
-    renderChunk();
+    renderChunks();
     ctx.restore();
 }
 
@@ -53,16 +54,28 @@ function renderBg(camera) {
         canvas.height
     );
 }
-function renderChunk() {
+function renderChunks() {
+    for (let j = 0; j < worldChunksHeight; j++) {
+        for (let i = 0; i < worldChunksWidth; i++) {
+            const index = j * worldChunksWidth + i;
+            const offset = {
+                x: i * chunkSize,
+                y: j * chunkSize,
+            };
+            renderChunk(chunks[index], offset);
+        }
+    }
+}
+function renderChunk(chunk, offset) {
     ctx.fillStyle   = "#aa5555";
     ctx.strokeStyle = "#000000";
 
-    for (let j = 0; j < chunkSize; j++) {
-        for (let i = 0; i < chunkSize; i++) {
-            const index = j * chunkSize + i;
+    for (let j = 0; j < chunkTileCount; j++) {
+        for (let i = 0; i < chunkTileCount; i++) {
+            const index = j * chunkTileCount + i;
             if (chunk[index] == '#') {
-                const x = i * tileSize;
-                const y = j * tileSize;
+                const x = offset.x + i * tileSize;
+                const y = offset.y + j * tileSize;
                 ctx.fillRect(x, y, tileSize, tileSize);
                 ctx.strokeRect(x, y, tileSize, tileSize);
             }
