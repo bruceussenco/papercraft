@@ -2,7 +2,6 @@ const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
 canvas.width  = 400;
 canvas.height = 400;
-canvas.addEventListener("mousemove", updateMousePos, false);
 
 const bgColor   = "#4488ee";
 const chunkTileCount = 16;
@@ -11,6 +10,7 @@ const chunkSize = chunkTileCount * tileSize;
 
 const mouse  = {x: 0, y: 0};
 const camera = {x: 0, y: 0};
+const player = new Player(100, 100, 20, 40);
 let oldTimeStamp = 0;
 
 init();
@@ -24,8 +24,6 @@ function gameLoop(timeStamp) {
     const fps = Math.round(1/dt);
 
     update(dt);
-    camera.x = mouse.x;
-    camera.y = mouse.y;
     render(camera);
     showFPS(fps);
     window.requestAnimationFrame(gameLoop);
@@ -35,6 +33,11 @@ function update(dt) {
         console.log(dt);
         return;
     }
+
+    let dir = 0;
+    if (pressedKeys.get('a')) dir -= 1;
+    if (pressedKeys.get('d')) dir += 1;
+    player.move(dir);
 }
 function render(camera) {
     ctx.save();
@@ -42,6 +45,7 @@ function render(camera) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderBg(camera);
     renderChunks();
+    renderPlayer();
     ctx.restore();
 }
 
@@ -82,14 +86,29 @@ function renderChunk(chunk, offset) {
         }
     }
 }
+function renderPlayer() {
+    ctx.fillStyle = "#2222ff";
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+}
 function showFPS(fps) {
     ctx.font = "20px Arial";
     ctx.fillStyle = "#00ff88";
     ctx.fillText("FPS: " + fps, 10, 30);
 }
 
+canvas.addEventListener("mousemove", updateMousePos, false);
 function updateMousePos(e) {
     var rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
 }
+
+////////////////////////////////
+//////////// Input /////////////
+////////////////////////////////
+const pressedKeys = new Map();
+
+document.addEventListener("keydown", onKeyDown);
+document.addEventListener("keyup", onKeyUp);
+function onKeyDown(e) { pressedKeys.set(e.key, true); }
+function onKeyUp(e) { pressedKeys.set(e.key, false); }
