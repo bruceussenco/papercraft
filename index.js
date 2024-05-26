@@ -4,15 +4,12 @@ canvas.width  = 400;
 canvas.height = 400;
 
 const bgColor   = "#4488ee";
-const chunkTileCount = 16;
-const tileSize  = 20;
-const chunkSize = chunkTileCount * tileSize;
 
 const mouse  = {x: 0, y: 0};
 const player = new Player(100, 100, 20, 40, 3);
 let oldTimeStamp = 0;
 
-let devMode = false;
+let devMode = true;
 
 init();
 function init() {
@@ -52,23 +49,19 @@ function update(dt) {
     player.update();
 }
 function render(camera) {
-    ctx.save();
-    ctx.translate(-camera.x, -camera.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    renderBg(camera);
+    renderBg();
+
+    ctx.save();
+    ctx.translate(-camera.x + canvas.width/2, -camera.y + canvas.height/2);
     renderChunks();
     renderPlayer();
     ctx.restore();
 }
 
-function renderBg(camera) {
+function renderBg() {
     ctx.fillStyle = bgColor;
-    ctx.fillRect(
-        camera.x,
-        camera.y,
-        canvas.width,
-        canvas.height
-    );
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 function renderChunks() {
     for (let j = 0; j < worldChunksHeight; j++) {
@@ -86,14 +79,14 @@ function renderChunk(chunk, offset) {
     ctx.fillStyle   = "#aa5555";
     ctx.strokeStyle = "#000000";
 
-    for (let j = 0; j < chunkTileCount; j++) {
-        for (let i = 0; i < chunkTileCount; i++) {
-            const index = j * chunkTileCount + i;
+    for (let j = 0; j < chunkBlocksSize; j++) {
+        for (let i = 0; i < chunkBlocksSize; i++) {
+            const index = j * chunkBlocksSize + i;
             if (chunk[index] == '#') {
-                const x = offset.x + i * tileSize;
-                const y = offset.y + j * tileSize;
-                ctx.fillRect(x, y, tileSize, tileSize);
-                ctx.strokeRect(x, y, tileSize, tileSize);
+                const x = offset.x + i * blockSize;
+                const y = offset.y + j * blockSize;
+                ctx.fillRect(x, y, blockSize, blockSize);
+                ctx.strokeRect(x, y, blockSize, blockSize);
             }
         }
     }

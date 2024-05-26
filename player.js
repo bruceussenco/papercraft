@@ -6,8 +6,8 @@ class Player extends Actor {
     }
 
     update() {
-        this.camera.x = this.x - 100;
-        this.camera.y = this.y - 100;
+        this.camera.x = this.x + this.w/2;
+        this.camera.y = this.y + this.h/2;
     }
 
     walk(dir) {
