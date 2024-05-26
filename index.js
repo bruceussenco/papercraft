@@ -79,14 +79,15 @@ function renderChunk(chunk, offset) {
     ctx.fillStyle   = "#aa5555";
     ctx.strokeStyle = "#000000";
 
-    for (let j = 0; j < chunkBlocksSize; j++) {
-        for (let i = 0; i < chunkBlocksSize; i++) {
-            const index = j * chunkBlocksSize + i;
-            if (chunk[index] == '#') {
-                const x = offset.x + i * blockSize;
-                const y = offset.y + j * blockSize;
-                ctx.fillRect(x, y, blockSize, blockSize);
-                ctx.strokeRect(x, y, blockSize, blockSize);
+    for (let j = 0; j < chunkTilesSize; j++) {
+        for (let i = 0; i < chunkTilesSize; i++) {
+            const index = j * chunkTilesSize + i;
+
+            if (chunk[index].id != BLOCK_AIR) {
+                const x = offset.x + i * tileSize;
+                const y = offset.y + j * tileSize;
+                ctx.fillRect(x, y, tileSize, tileSize);
+                ctx.strokeRect(x, y, tileSize, tileSize);
             }
         }
     }
