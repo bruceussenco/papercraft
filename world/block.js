@@ -1,6 +1,6 @@
 class Block {
-    constructor(collision) {
-        this.collision = collision;
+    constructor(collide) {
+        this.collide = collide;
     }
 }
 

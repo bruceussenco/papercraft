@@ -46,6 +46,7 @@ function update(dt) {
         player.walk(moveX);
     }
 
+    player.collide(chunks);
     player.update();
 }
 function render(camera) {
