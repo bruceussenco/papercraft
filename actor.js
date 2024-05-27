@@ -36,61 +36,60 @@ class Actor {
     }
 
     collideChunk(i, j, chunk) {
-        this.collideChunkHorizontal(i, j, chunk);
-        this.collideChunkVertical(i, j, chunk);
-    }
-
-    collideChunkHorizontal(i, j, chunk) {
         const cx = i * chunkSize;
         const cy = j * chunkSize;
 
-        for (let ti = 0; ti < chunkTilesSize; ti++) {
-            const tx = cx + ti * tileSize;
-            // if don't collide in x axis, don't check collilion for this col
-            if (this.x >= tx + tileSize || this.x + this.w <= tx) continue;
-            
-            for (let tj = 0; tj < chunkTilesSize; tj++) {
-                const tIndex = tj * chunkTilesSize + ti;
-                const tile = chunk[tIndex];
-                if (!blocks[tile.id].collide) continue;
+        /*
+        // get min pos of top left corner, with cur pos and old pos
+        // get max pos of bottom right corner, with cur pos and old pos
+        // to reduce the area to check collision
+        let pos0InChunk = {x: 0, y: 0};
+        pos0InChunk.x = Math.min(this.x, this.oldX) - cx;
+        pos0InChunk.y = Math.min(this.y, this.oldY) - cy;
+        let pos1InChunk = {x: 0, y: 0};
+        pos0InChunk.x = Math.max(this.x, this.oldX) - cx;
+        pos0InChunk.y = Math.max(this.y, this.oldY) - cy;
 
-                const ty = cy + tj * tileSize;
-
-                if (this.oldY >= ty + tileSize && this.y < ty + tileSize) {
-                    this.y = ty + tileSize;
-                }
-
-                if (this.oldY + this.h <= ty && this.y + this.h > ty) {
-                    this.y = ty - this.h;
-                }
-            }
-        }
-    }
-
-    collideChunkVertical(i, j, chunk) {
-        const cx = i * chunkSize;
-        const cy = j * chunkSize;
+        // tile range to check collision
+        const leftMostTile = Math.floor(pos0InChunk/tileSize);
+        */
 
         for (let tj = 0; tj < chunkTilesSize; tj++) {
             const ty = cy + tj * tileSize;
-            // if don't collide in y axis, don't check collilion for this row
-            if (this.y >= ty + tileSize || this.y + this.h <= ty) continue;
-            
             for (let ti = 0; ti < chunkTilesSize; ti++) {
                 const tIndex = tj * chunkTilesSize + ti;
                 const tile = chunk[tIndex];
+                // block don't have collision
                 if (!blocks[tile.id].collide) continue;
 
                 const tx = cx + ti * tileSize;
 
-                if (this.oldX >= tx + tileSize && this.x < tx + tileSize) {
-                    this.x = tx + tileSize;
+                // horizontal collision
+                if (!(this.x >= tx + tileSize || this.x + this.w <= tx)) {
+                    // tile bottom
+                    if (this.oldY >= ty + tileSize && this.y < ty + tileSize) {
+                        this.y = ty + tileSize;
+                    }
+
+                    // tile top
+                    if (this.oldY + this.h <= ty && this.y + this.h > ty) {
+                        this.y = ty - this.h;
+                    }
                 }
 
-                if (this.oldX + this.w <= tx && this.x + this.w > tx) {
-                    this.x = tx - this.w;
+                // vertical collision
+                if (!(this.y >= ty + tileSize || this.y + this.h <= ty)) {
+                    // tile right - actor left collision
+                    if (this.oldX >= tx + tileSize && this.x < tx + tileSize) {
+                        this.x = tx + tileSize;
+                    }
+
+                    // tile left
+                    if (this.oldX + this.w <= tx && this.x + this.w > tx) {
+                        this.x = tx - this.w;
+                    }
                 }
-            }
+           }
         }
     }
 }
