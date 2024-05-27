@@ -4,7 +4,7 @@ const chunkSize = chunkTilesSize * tileSize;
 
 function chunkByText(text) {
     if (text.length != chunkTilesCount)
-        console.log("[error] text don't have " + chunkTilesCount + " length");
+        alert("[error] text don't have " + chunkTilesCount + " length, lenght = " + text.length);
 
     const chunk = new Array(chunkTilesCount);
 
