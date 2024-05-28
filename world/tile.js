@@ -1,4 +1,4 @@
-const tileSize = 20;
+const tileSize = 32;
 
 class Tile {
     constructor(id) {

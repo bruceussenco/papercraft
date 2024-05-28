@@ -1,12 +1,12 @@
 const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
-canvas.width  = 400;
-canvas.height = 400;
+canvas.width  = 800;
+canvas.height = 600;
 
 const bgColor   = "#4488ee";
 
 const mouse  = {x: 0, y: 0};
-const player = new Player(40, 100, 18, 38, 3, 10);
+const player = new Player(40, 100, 30, 62, 3, 10);
 let oldTimeStamp = 0;
 
 let devMode = true;
@@ -83,18 +83,15 @@ function renderChunks() {
     }
 }
 function renderChunk(chunk, offset) {
-    ctx.fillStyle   = "#aa5555";
-    ctx.strokeStyle = "#000000";
-
     for (let j = 0; j < chunkTilesSize; j++) {
         for (let i = 0; i < chunkTilesSize; i++) {
             const index = j * chunkTilesSize + i;
+            const id = chunk[index].id;
 
-            if (chunk[index].id != BLOCK_AIR) {
+            if (id != BLOCK_AIR) {
                 const x = offset.x + i * tileSize;
                 const y = offset.y + j * tileSize;
-                ctx.fillRect(x, y, tileSize, tileSize);
-                ctx.strokeRect(x, y, tileSize, tileSize);
+                ctx.drawImage(blocks[id].texture, x, y);
             }
         }
     }
