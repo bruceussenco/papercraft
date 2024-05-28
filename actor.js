@@ -1,14 +1,27 @@
 class Actor {
+    velX = 0;
+    velY = 0;
     constructor(x, y, w, h, speed) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
 
-        this.speed = speed;
-
         this.oldX = x;
         this.oldY = y;
+
+        this.speed = speed;
+    }
+
+    updateOldPos() {
+        this.oldX = this.x;
+        this.oldY = this.y;
+    }
+
+    move() {
+        this.updateOldPos();
+        this.x += this.velX;
+        this.y += this.velY;
     }
 
     isInChunk(i, j) {
