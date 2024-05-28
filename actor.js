@@ -39,24 +39,28 @@ class Actor {
         const cx = i * chunkSize;
         const cy = j * chunkSize;
 
-        /*
         // get min pos of top left corner, with cur pos and old pos
         // get max pos of bottom right corner, with cur pos and old pos
         // to reduce the area to check collision
-        let pos0InChunk = {x: 0, y: 0};
-        pos0InChunk.x = Math.min(this.x, this.oldX) - cx;
-        pos0InChunk.y = Math.min(this.y, this.oldY) - cy;
-        let pos1InChunk = {x: 0, y: 0};
-        pos0InChunk.x = Math.max(this.x, this.oldX) - cx;
-        pos0InChunk.y = Math.max(this.y, this.oldY) - cy;
+        const pos0InChunk = {
+            x: Math.min(this.x, this.oldX) - cx,
+            y: Math.min(this.y, this.oldY) - cy,
+        };
+        const pos1InChunk = {
+            x: Math.max(this.x, this.oldX) + this.w - cx,
+            y: Math.max(this.y, this.oldY) + this.h - cy,
+        };
 
         // tile range to check collision
-        const leftMostTile = Math.floor(pos0InChunk/tileSize);
-        */
+        // leftmostTileIndexToCheckCollisionWithActor ...
+        const leftmostTile   = Math.max( Math.floor(pos0InChunk.x/tileSize), 0 );
+        const rightmostTile  = Math.min( Math.floor(pos1InChunk.x/tileSize)+1, chunkTilesSize );
+        const topmostTile    = Math.max( Math.floor(pos0InChunk.y/tileSize), 0 );
+        const bottommostTile = Math.min( Math.floor(pos1InChunk.y/tileSize)+1, chunkTilesSize );
 
-        for (let tj = 0; tj < chunkTilesSize; tj++) {
+        for (let tj = topmostTile; tj < bottommostTile; tj++) {
             const ty = cy + tj * tileSize;
-            for (let ti = 0; ti < chunkTilesSize; ti++) {
+            for (let ti = leftmostTile; ti < rightmostTile; ti++) {
                 const tIndex = tj * chunkTilesSize + ti;
                 const tile = chunk[tIndex];
                 // block don't have collision
