@@ -1,7 +1,7 @@
 class Actor {
     velX = 0;
     velY = 0;
-    constructor(x, y, w, h, speed) {
+    constructor(x, y, w, h, speed, jumpForce) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -11,6 +11,7 @@ class Actor {
         this.oldY = y;
 
         this.speed = speed;
+        this.jumpForce = jumpForce;
     }
 
     updateOldPos() {
@@ -22,6 +23,15 @@ class Actor {
         this.updateOldPos();
         this.x += this.velX;
         this.y += this.velY;
+    }
+
+    applyGravity() {
+        this.velY += GRAVITY;
+        this.velY = Math.min(this.velY, MAX_GRAVITY);
+    }
+
+    jump() {
+        this.velY = -this.jumpForce;
     }
 
     isInChunk(i, j) {
@@ -83,27 +93,31 @@ class Actor {
 
                 // horizontal collision
                 if (!(this.x >= tx + tileSize || this.x + this.w <= tx)) {
-                    // tile bottom
+                    // tile bottom-actor top collision
                     if (this.oldY >= ty + tileSize && this.y < ty + tileSize) {
                         this.y = ty + tileSize;
+                        this.velY = 0;
                     }
 
                     // tile top
                     if (this.oldY + this.h <= ty && this.y + this.h > ty) {
                         this.y = ty - this.h;
+                        this.velY = 0;
                     }
                 }
 
                 // vertical collision
                 if (!(this.y >= ty + tileSize || this.y + this.h <= ty)) {
-                    // tile right - actor left collision
+                    // tile right
                     if (this.oldX >= tx + tileSize && this.x < tx + tileSize) {
                         this.x = tx + tileSize;
+                        this.velX = 0;
                     }
 
                     // tile left
                     if (this.oldX + this.w <= tx && this.x + this.w > tx) {
                         this.x = tx - this.w;
+                        this.velX = 0;
                     }
                 }
            }

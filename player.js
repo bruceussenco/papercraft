@@ -1,6 +1,6 @@
 class Player extends Actor {
-    constructor(x, y, w, h, speed) {
-        super(x, y, w, h, speed)
+    constructor(x, y, w, h, speed, jumpForce) {
+        super(x, y, w, h, speed, jumpForce);
 
         this.camera = {x: 0, y: 0};
     }

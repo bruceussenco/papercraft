@@ -6,7 +6,7 @@ canvas.height = 400;
 const bgColor   = "#4488ee";
 
 const mouse  = {x: 0, y: 0};
-const player = new Player(40, 100, 18, 38, 3);
+const player = new Player(40, 100, 18, 38, 3, 10);
 let oldTimeStamp = 0;
 
 let devMode = true;
@@ -42,8 +42,14 @@ function update(dt) {
     if (downKeys.get('g')) devMode = !devMode;
 
     player.velX = moveX * player.speed;
-    player.velY = 0;
-    if (devMode) player.velY = moveY * player.speed;
+    if (devMode) {
+        player.velY = moveY * player.speed;
+    } else {
+        player.applyGravity();
+        if (moveY == -1) {
+            player.jump();
+        }
+    }
     player.move();
 
     player.collide(chunks);
