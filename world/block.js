@@ -9,11 +9,15 @@ class Block {
 
 const BLOCK_AIR   = 0;
 const BLOCK_DIRT  = 1;
-const BLOCK_COUNT = 2;
+const BLOCK_GRASS = 2;
+const BLOCK_STONE = 3
+const BLOCK_COUNT = 4;
 
 const blocks = new Array(BLOCK_COUNT);
-blocks[BLOCK_AIR]  = new Block("air", false);
-blocks[BLOCK_DIRT] = new Block("dirt", true);
+blocks[BLOCK_AIR]   = new Block("air",  false);
+blocks[BLOCK_DIRT]  = new Block("dirt",  true);
+blocks[BLOCK_GRASS] = new Block("grass", true);
+blocks[BLOCK_STONE] = new Block("stone", true);
 
 loadBlockTextures();
 function loadBlockTextures() {
