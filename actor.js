@@ -38,17 +38,30 @@ class Actor {
         const cx = i * chunkSize
         const cy = j * chunkSize
 
-        if (cx + chunkSize < this.x) return false;
-        if (this.x + this.w < cx)    return false;
+        if (cx + chunkSize < this.x && cx + chunkSize < this.oldX) return false;
+        if (this.x + this.w < cx    && this.oldX + this.w < cx)    return false;
 
-        if (cy + chunkSize < this.y) return false;
-        if (this.y + this.h < cy)    return false;
+        if (cy + chunkSize < this.y && cy + chunkSize < this.oldY) return false;
+        if (this.y + this.h < cy    && this.oldY + this.h < cy)    return false;
 
         return true;
     }
 
     collide(chunks) {
-        for (let j = 0; j < worldChunksHeight; j++) {
+        // invert j loop if player is moving up, to fix collision bug
+        let bj = 0;
+        let ej = worldChunksHeight;
+        let inc = 1;
+        let condition = (j) => { return j < ej; };
+
+        if (this.velY < 0) {
+            bj = worldChunksHeight-1;
+            ej = 0;
+            inc = -1;
+            condition = (j) => { return j >= ej; };
+        }
+
+        for (let j = bj; condition(j); j += inc) {
             for (let i = 0; i < worldChunksWidth; i++) {
                 if (this.isInChunk(i, j)) {
                     const index = j * worldChunksWidth + i;
@@ -81,7 +94,22 @@ class Actor {
         const topmostTile    = Math.max( Math.floor(pos0InChunk.y/tileSize), 0 );
         const bottommostTile = Math.min( Math.floor(pos1InChunk.y/tileSize)+1, chunkTilesSize );
 
-        for (let tj = topmostTile; tj < bottommostTile; tj++) {
+        // use these vars to invert loop
+        // if actor is moving up, to fix a bug collision
+        let tjb = topmostTile;    // begin tile j
+        let tje = bottommostTile; //   end tile j
+        let inc = 1;
+        let condition = (tj) => { return tj < tje };
+
+        if (this.velY < 0) {
+            tjb = bottommostTile-1;
+            tje = topmostTile;
+            inc = -1;
+            condition = (tj) => { return tj >= tje; };
+        }
+
+        //for (let tj = topmostTile; tj < bottommostTile; tj++) {
+        for (let tj = tjb; condition(tj); tj += inc) {
             const ty = cy + tj * tileSize;
             for (let ti = leftmostTile; ti < rightmostTile; ti++) {
                 const tIndex = tj * chunkTilesSize + ti;
