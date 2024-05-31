@@ -6,7 +6,7 @@ canvas.height = 600;
 const bgColor   = "#4488ee";
 
 const mouse  = {x: 0, y: 0};
-const player = new Player(40, 100, 30, 62, 3, 10);
+const player = new Player(40, 100, 30, 62, 3, 11);
 let oldTimeStamp = 0;
 
 let devMode = true;
@@ -46,7 +46,7 @@ function update(dt) {
         player.velY = moveY * player.speed;
     } else {
         player.applyGravity();
-        if (moveY == -1) {
+        if (moveY == -1 && player.isOnGround) {
             player.jump();
         }
     }
@@ -63,6 +63,11 @@ function render(camera) {
     ctx.translate(-camera.x + canvas.width/2, -camera.y + canvas.height/2);
     renderChunks();
     renderPlayer();
+
+    if (player.isOnGround) ctx.fillStyle = "red";
+    else                   ctx.fillStyle = "lime";
+    ctx.fillRect(player.groundChecker.x, player.groundChecker.y, player.groundChecker.w, player.groundChecker.h);
+    
     ctx.restore();
 }
 

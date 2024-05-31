@@ -1,17 +1,21 @@
-class Actor {
-    velX = 0;
-    velY = 0;
+class Actor extends AABBRect {
+    isOnGround = false;
     constructor(x, y, w, h, speed, jumpForce) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-
-        this.oldX = x;
-        this.oldY = y;
+        super(x, y, w, h);
 
         this.speed = speed;
         this.jumpForce = jumpForce;
+        this.groundChecker = new CollisionBox(0, 0, w-2, w/2);
+        this.updateGroundChecker();
+    }
+
+    update() {
+        this.updateGroundChecker();
+    }
+
+    updateGroundChecker() {
+        this.groundChecker.x = this.x + 1;
+        this.groundChecker.y = this.y + this.h - this.groundChecker.h/2;
     }
 
     updateOldPos() {
@@ -48,6 +52,8 @@ class Actor {
     }
 
     collide(chunks) {
+        this.isOnGround = false;
+
         // invert j loop if player is moving up, to fix collision bug
         let bj = 0;
         let ej = worldChunksHeight;
@@ -148,6 +154,7 @@ class Actor {
                         this.velX = 0;
                     }
                 }
+                if (this.groundChecker.collideTile(tx, ty)) this.isOnGround = true;
            }
         }
     }
