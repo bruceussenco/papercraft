@@ -7,7 +7,7 @@ class Player extends Actor {
 
     update() {
         super.update();
-        this.camera.x = this.x + this.w/2;
-        this.camera.y = this.y + this.h/2;
+        this.camera.x = Math.floor(this.x + this.w/2);
+        this.camera.y = Math.floor(this.y + this.h/2);
     }
 }
