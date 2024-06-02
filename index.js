@@ -60,7 +60,7 @@ function render(camera) {
     renderBg();
 
     ctx.save();
-    ctx.translate(-camera.x + screenWidth/2, -camera.y + screenHeight/2);
+    ctx.translate(-camera.x, -camera.y);
     renderChunks(camera);
     renderPlayer();
 

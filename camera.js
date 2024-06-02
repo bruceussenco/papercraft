@@ -6,13 +6,16 @@ class Camera {
         this.y = y;
     }
 
-    moveTo(x, y) {
-        this.x = Math.floor(x);
-        this.y = Math.floor(y);
+    moveCenterTo(x, y) {
+        this.x = Math.floor(x) - this.w/2;
+        this.y = Math.floor(y) - this.h/2;
+        this.collideOnBorders();
+    }
 
-        if (this.x - screenWidth/2  < 0) this.x = screenWidth/2;
-        if (this.x + screenWidth/2  > worldWidth)  this.x = worldWidth  - screenWidth/2;
-        if (this.y - screenHeight/2 < 0) this.y = screenHeight/2;
-        if (this.y + screenHeight/2 > worldHeight) this.y = worldHeight - screenHeight/2;
+    collideOnBorders() {
+        if (this.x < 0) this.x = 0;
+        if (this.x + this.w > worldWidth)  this.x = worldWidth  - this.w;
+        if (this.y < 0) this.y = 0;
+        if (this.y + this.h > worldHeight) this.y = worldHeight - this.h;
     }
 }
