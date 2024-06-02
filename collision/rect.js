@@ -28,3 +28,12 @@ class CollisionBox extends Rect {
         return true;
     }
 }
+
+function rectCollision(r0, r1) {
+    if (r0.x + r0.w < r1.x) return false;
+    if (r0.x > r1.x + r1.w) return false;
+    if (r0.y + r0.h < r1.y) return false;
+    if (r0.y > r1.y + r1.h) return false;
+
+    return true;
+}

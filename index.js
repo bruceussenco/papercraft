@@ -61,7 +61,7 @@ function render(camera) {
 
     ctx.save();
     ctx.translate(-camera.x + screenWidth/2, -camera.y + screenHeight/2);
-    renderChunks();
+    renderChunks(camera);
     renderPlayer();
 
     if (player.isOnGround) ctx.fillStyle = "red";
@@ -78,28 +78,39 @@ function renderBg() {
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-function renderChunks() {
+function renderChunks(camera) {
     for (let j = 0; j < worldChunksHeight; j++) {
         for (let i = 0; i < worldChunksWidth; i++) {
             const index = j * worldChunksWidth + i;
             const offset = {
                 x: i * chunkSize,
                 y: j * chunkSize,
+                w: chunkSize,
+                h: chunkSize,
             };
-            renderChunk(chunks[index], offset);
+
+            if (rectCollision(offset, camera)) {
+                renderChunk(chunks[index], fgChunks[index], offset);
+            }
         }
     }
 }
-function renderChunk(chunk, offset) {
+function renderChunk(chunk, fgChunk, offset) {
     for (let j = 0; j < chunkTilesSize; j++) {
         for (let i = 0; i < chunkTilesSize; i++) {
             const index = j * chunkTilesSize + i;
-            const id = chunk[index].id;
+            const id   = chunk[index].id;
+            const fgId = fgChunk[index].id;
+
+            const x = offset.x + i * tileSize;
+            const y = offset.y + j * tileSize;
 
             if (id != BLOCK_AIR) {
-                const x = offset.x + i * tileSize;
-                const y = offset.y + j * tileSize;
                 ctx.drawImage(blocks[id].texture, x, y);
+            } else if (fgId != BLOCK_AIR) {
+                ctx.drawImage(blocks[fgId].texture, x, y);
+                ctx.fillStyle = "#00000088";
+                ctx.fillRect(x, y, tileSize, tileSize);
             }
         }
     }
