@@ -32,28 +32,37 @@ function update(dt) {
         return;
     }
 
-    let moveX = 0;
-    let moveY = 0;
-    if (downKeys.get('w')) moveY -= 1;
-    if (downKeys.get('s')) moveY += 1;
-    if (downKeys.get('a')) moveX -= 1;
-    if (downKeys.get('d')) moveX += 1;
+    if (isKeyPressed(KEY_G)) devMode = !devMode;
 
-    if (downKeys.get('g')) devMode = !devMode;
-
-    player.velX = moveX * player.speed;
     if (devMode) {
+        let moveX = 0;
+        let moveY = 0;
+        if (isKeyDown(KEY_W)) moveY -= 1;
+        if (isKeyDown(KEY_S)) moveY += 1;
+        if (isKeyDown(KEY_A)) moveX -= 1;
+        if (isKeyDown(KEY_D)) moveX += 1;
+
+        player.velX = moveX * player.speed;
         player.velY = moveY * player.speed;
     } else {
-        player.applyGravity();
-        if (moveY == -1 && player.isOnGround) {
-            player.jump();
-        }
-    }
-    player.move();
+        let moveX = 0;
+        let jump = false;
+        if (isKeyDown(KEY_A)) moveX -= 1;
+        if (isKeyDown(KEY_D)) moveX += 1;
+        if (isKeyPressed(KEY_W) || isKeyPressed(KEY_SPACE)) jump = true;
 
+        player.applyGravity();
+        if (jump && player.isOnGround) player.jump();
+        player.velX = moveX * player.speed;
+    }
+
+    player.move();
     player.collide(chunks);
     player.update();
+
+    downKeys.forEach((value, key, map) => {
+        lastDownKeys.set(key, value);
+    });
 }
 function render(camera) {
     ctx.clearRect(0, 0, screenWidth, screenHeight);
@@ -132,13 +141,3 @@ function updateMousePos(e) {
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
 }
-
-////////////////////////////////
-//////////// Input /////////////
-////////////////////////////////
-const downKeys = new Map();
-
-document.addEventListener("keydown", onKeyDown);
-document.addEventListener("keyup", onKeyUp);
-function onKeyDown(e) { downKeys.set(e.key, true); }
-function onKeyUp(e) { downKeys.set(e.key, false); }
