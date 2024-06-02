@@ -54,6 +54,12 @@ class Actor extends AABBRect {
     collide(chunks) {
         this.isOnGround = false;
 
+        // collide with world borders
+        if (this.x < 0) this.x = 0;
+        if (this.x + this.w > worldWidth)  this.x = worldWidth  - this.w;
+        if (this.y < 0) this.y = 0;
+        if (this.y + this.h > worldHeight) this.y = worldHeight - this.h;
+
         // invert j loop if player is moving up, to fix collision bug
         let bj = 0;
         let ej = worldChunksHeight;

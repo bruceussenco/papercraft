@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
-canvas.width  = 800;
-canvas.height = 600;
+canvas.width  = screenWidth;
+canvas.height = screenHeight;
 
 const bgColor   = "#4488ee";
 
@@ -56,17 +56,20 @@ function update(dt) {
     player.update();
 }
 function render(camera) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, screenWidth, screenHeight);
     renderBg();
 
     ctx.save();
-    ctx.translate(-camera.x + canvas.width/2, -camera.y + canvas.height/2);
+    ctx.translate(-camera.x + screenWidth/2, -camera.y + screenHeight/2);
     renderChunks();
     renderPlayer();
 
     if (player.isOnGround) ctx.fillStyle = "red";
     else                   ctx.fillStyle = "lime";
-    ctx.fillRect(player.groundChecker.x, player.groundChecker.y, player.groundChecker.w, player.groundChecker.h);
+    ctx.fillRect(
+        player.groundChecker.x, player.groundChecker.y,
+        player.groundChecker.w, player.groundChecker.h
+    );
     
     ctx.restore();
 }
