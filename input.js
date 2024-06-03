@@ -23,3 +23,30 @@ const KEY_D = 68;
 const KEY_SPACE = 32;
 
 const KEY_G = 71;
+
+// mouse //
+
+const mouse  = {x: 0, y: 0};
+
+function updateMousePos(e) {
+    var rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+}
+
+// use chunks[ci, cj].tiles[ti, tj]
+function getTileOnMouse(camera) {
+    // global mouse pos
+    const mx = mouse.x + camera.x;
+    const my = mouse.y + camera.y;
+
+    // chunk index
+    const ci = Math.floor(mx/chunkSize);
+    const cj = Math.floor(my/chunkSize);
+
+    // tile index (in chunk)
+    const ti = Math.floor(mx/tileSize) % chunkTilesSize;
+    const tj = Math.floor(my/tileSize) % chunkTilesSize;
+
+    return {ci, cj, ti, tj};
+}

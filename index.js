@@ -2,10 +2,10 @@ const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
 canvas.width  = screenWidth;
 canvas.height = screenHeight;
+canvas.addEventListener("mousemove", updateMousePos, false);
 
 const bgColor   = "#4488ee";
 
-const mouse  = {x: 0, y: 0};
 const player = new Player(40, 100, 30, 62, 3, 11);
 let oldTimeStamp = 0;
 
@@ -73,13 +73,27 @@ function render(camera) {
     renderChunks(camera);
     renderPlayer();
 
-    if (player.isOnGround) ctx.fillStyle = "red";
-    else                   ctx.fillStyle = "lime";
-    ctx.fillRect(
-        player.groundChecker.x, player.groundChecker.y,
-        player.groundChecker.w, player.groundChecker.h
-    );
-    
+    /* ground checker */ {
+        if (player.isOnGround) ctx.fillStyle = "red";
+        else                   ctx.fillStyle = "lime";
+        ctx.fillRect(
+            player.groundChecker.x, player.groundChecker.y,
+            player.groundChecker.w, player.groundChecker.h
+        );
+    }
+
+    /* tile marker */ {
+        // chunk/tile on cursor
+        tm = getTileOnMouse(camera); 
+        //console.log(`chunk: (${tm.ci}, ${tm.cj}), tile: (${tm.ti}, ${tm.tj})`);
+
+        // global pos of tile
+        const tgx = tm.ci * chunkSize + tm.ti * tileSize;
+        const tgy = tm.cj * chunkSize + tm.tj * tileSize;
+
+        ctx.strokeRect(tgx, tgy, tileSize, tileSize);
+    }
+
     ctx.restore();
 }
 
@@ -135,9 +149,4 @@ function showFPS(fps) {
     ctx.fillText("FPS: " + fps, 10, 30);
 }
 
-canvas.addEventListener("mousemove", updateMousePos, false);
-function updateMousePos(e) {
-    var rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-}
+
