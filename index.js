@@ -17,21 +17,18 @@ function init() {
 }
 
 function gameLoop(timeStamp) {
-    const dt = (timeStamp - oldTimeStamp)/1000;
-    oldTimeStamp = timeStamp;
-    const fps = Math.round(1/dt);
+    if (timeStamp) {
+        const dt = (timeStamp - oldTimeStamp)/1000;
+        oldTimeStamp = timeStamp;
+        const fps = Math.round(1/dt);
 
-    update(dt);
-    render(player.camera);
-    showFPS(fps);
+        update(dt);
+        render(player.camera);
+        showFPS(fps);
+    }
     window.requestAnimationFrame(gameLoop);
 }
 function update(dt) {
-    if (!dt) {
-        console.log(dt);
-        return;
-    }
-
     if (isKeyPressed(KEY_G)) devMode = !devMode;
 
     if (devMode) {
@@ -84,14 +81,18 @@ function render(camera) {
 
     /* tile marker */ {
         // chunk/tile on cursor
-        tm = getTileOnMouse(camera); 
+        const tm = getTileOnMouse(camera);
+        const chunkIndex = tm.cj * worldChunksWidth + tm.ci;
+        const tileIndex  = tm.tj * chunkTilesSize + tm.ti;
         //console.log(`chunk: (${tm.ci}, ${tm.cj}), tile: (${tm.ti}, ${tm.tj})`);
 
-        // global pos of tile
-        const tgx = tm.ci * chunkSize + tm.ti * tileSize;
-        const tgy = tm.cj * chunkSize + tm.tj * tileSize;
+        if (chunks[chunkIndex][tileIndex].id !== BLOCK_AIR) {
+            // global pos of tile
+            const tgx = tm.ci * chunkSize + tm.ti * tileSize;
+            const tgy = tm.cj * chunkSize + tm.tj * tileSize;
 
-        ctx.strokeRect(tgx, tgy, tileSize, tileSize);
+            ctx.strokeRect(tgx, tgy, tileSize, tileSize);
+        }
     }
 
     ctx.restore();
