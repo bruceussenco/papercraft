@@ -27,3 +27,10 @@ function chunkByText(text) {
 
     return chunk;
 }
+
+function newEmptyChunk() {
+    const chunk = new Array(chunkTilesCount);
+    for (let i = 0; i < chunkTilesCount; i++) chunk[i] = new Tile(BLOCK_AIR);
+    return chunk;
+}
+
