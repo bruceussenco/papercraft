@@ -6,10 +6,10 @@ canvas.addEventListener("mousemove", updateMousePos, false);
 
 const bgColor   = "#4488ee";
 
-const player = new Player(40, 100, 30, 62, 3, 11);
+const player = new Player(40, 200, 30, 62, 3, 11);
 let oldTimeStamp = 0;
 
-let devMode = true;
+let devMode = false;
 
 init();
 function init() {
