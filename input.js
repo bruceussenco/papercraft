@@ -6,7 +6,6 @@ const isKeyPressed = (key) => downKeys.get(key) && !lastDownKeys.get(key);
 
 document.addEventListener("keydown", onKeyDown);
 function onKeyDown(e) {
-    //console.log(e.keyCode);
     downKeys.set(e.keyCode, true);
     if (e.keyCode == KEY_SPACE) e.preventDefault();
 }
@@ -26,8 +25,25 @@ const KEY_G = 71;
 
 // mouse //
 
+let isMousePressed = false;
+let isMouseDown    = false;
 const mouse  = {x: 0, y: 0};
 
+document.getElementById("canvas").addEventListener("mousedown", mouseClick);
+document.getElementById("canvas").addEventListener("mouseup", mouseUp);
+document.getElementById("canvas").addEventListener("mousemove", updateMousePos, false);
+
+function updateMouse() {
+    isMousePressed = false;
+}
+
+function mouseClick() {
+    isMousePressed = true;
+    isMouseDown = true;
+}
+function mouseUp() {
+    isMouseDown = false;
+}
 function updateMousePos(e) {
     var rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
@@ -50,3 +66,4 @@ function getTileOnMouse(camera) {
 
     return {ci, cj, ti, tj};
 }
+

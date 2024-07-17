@@ -2,7 +2,6 @@ const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
 canvas.width  = screenWidth;
 canvas.height = screenHeight;
-canvas.addEventListener("mousemove", updateMousePos, false);
 
 const bgColor   = "#4488ee";
 
@@ -29,6 +28,7 @@ function gameLoop(timeStamp) {
     window.requestAnimationFrame(gameLoop);
 }
 function update(dt) {
+    // check keys //
     if (isKeyPressed(KEY_G)) devMode = !devMode;
 
     if (devMode) {
@@ -53,6 +53,18 @@ function update(dt) {
         player.velX = moveX * player.speed;
     }
 
+    // check mouse //
+    if (isMousePressed) {
+        const tm = getTileOnMouse(player.camera);
+        const chunkIndex = tm.cj * worldChunksWidth + tm.ci;
+        const tileIndex  = tm.tj * chunkTilesSize + tm.ti;
+
+        if (chunks[chunkIndex][tileIndex].id !== BLOCK_BEDROCK) {
+            chunks[chunkIndex][tileIndex] = new Tile(BLOCK_AIR);
+        }
+    }
+
+    // update //
     player.move();
     player.collide(chunks);
     player.update();
@@ -60,6 +72,7 @@ function update(dt) {
     downKeys.forEach((value, key, map) => {
         lastDownKeys.set(key, value);
     });
+    updateMouse();
 }
 function render(camera) {
     ctx.clearRect(0, 0, screenWidth, screenHeight);
@@ -84,7 +97,6 @@ function render(camera) {
         const tm = getTileOnMouse(camera);
         const chunkIndex = tm.cj * worldChunksWidth + tm.ci;
         const tileIndex  = tm.tj * chunkTilesSize + tm.ti;
-        //console.log(`chunk: (${tm.ci}, ${tm.cj}), tile: (${tm.ti}, ${tm.tj})`);
 
         if (chunks[chunkIndex][tileIndex].id !== BLOCK_AIR) {
             // global pos of tile
@@ -144,5 +156,4 @@ function showFPS(fps) {
     ctx.fillStyle = "#00ff88";
     ctx.fillText("FPS: " + fps, 10, 30);
 }
-
 
