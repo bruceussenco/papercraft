@@ -5,7 +5,7 @@ class Actor extends AABBRect {
 
         this.speed = speed;
         this.jumpForce = jumpForce;
-        this.groundChecker = new CollisionBox(0, 0, w-2, w/2);
+        this.groundChecker = new Rect(0, 0, w-2, w/2);
         this.updateGroundChecker();
     }
 
@@ -160,7 +160,7 @@ class Actor extends AABBRect {
                         this.velX = 0;
                     }
                 }
-                if (this.groundChecker.collideTile(tx, ty)) this.isOnGround = true;
+                if (rectTileCollision(this, tx, ty)) this.isOnGround = true;
            }
         }
     }

@@ -17,18 +17,6 @@ class AABBRect extends Rect {
     }
 }
 
-class CollisionBox extends Rect {
-    constructor(x, y, w, h) {
-        super(x, y, w, h);
-    }
-
-    collideTile(x, y) {
-        if (this.x > x + tileSize || this.x + this.w < x) return false;
-        if (this.y > y + tileSize || this.y + this.h < y) return false;
-        return true;
-    }
-}
-
 function rectCollision(r0, r1) {
     if (r0.x + r0.w < r1.x) return false;
     if (r0.x > r1.x + r1.w) return false;
@@ -36,4 +24,10 @@ function rectCollision(r0, r1) {
     if (r0.y > r1.y + r1.h) return false;
 
     return true;
+}
+
+function rectTileCollision(rect, tileX, tileY) {
+    if (rect.x > tileX + tileSize || rect.x + rect.w < tileX) return false;
+    if (rect.y > tileY + tileSize || rect.y + rect.h < tileY) return false;
+    return true; 
 }
