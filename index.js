@@ -83,15 +83,6 @@ function render(camera) {
     renderChunks(camera);
     renderPlayer();
 
-    /* ground checker */ {
-        if (player.isOnGround) ctx.fillStyle = "red";
-        else                   ctx.fillStyle = "lime";
-        ctx.fillRect(
-            player.groundChecker.x, player.groundChecker.y,
-            player.groundChecker.w, player.groundChecker.h
-        );
-    }
-
     /* tile marker */ {
         // chunk/tile on cursor
         const tm = getTileOnMouse(camera);
@@ -150,6 +141,14 @@ function renderPlayer() {
     ctx.fillStyle = "#2222ff"; ctx.strokeStyle = "#000000";
     ctx.fillRect(player.x, player.y, player.w, player.h);
     ctx.strokeRect(player.x, player.y, player.w, player.h);
+
+    // ground checker
+    if (player.isOnGround) ctx.fillStyle = "red";
+    else                   ctx.fillStyle = "lime";
+    ctx.fillRect(
+        player.groundChecker.x, player.groundChecker.y,
+        player.groundChecker.w, player.groundChecker.h
+    );
 }
 function showFPS(fps) {
     ctx.font = "20px Arial";
