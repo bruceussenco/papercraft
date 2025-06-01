@@ -160,7 +160,7 @@ class Actor extends AABBRect {
                         this.velX = 0;
                     }
                 }
-                if (rectTileCollision(this, tx, ty)) this.isOnGround = true;
+                if (rectTileCollision(this.groundChecker, tx, ty)) this.isOnGround = true;
            }
         }
     }
