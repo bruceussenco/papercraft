@@ -7,6 +7,7 @@ class Player extends Actor {
 
     update() {
         super.update();
-        this.camera.moveCenterTo(this.x + this.w/2, this.y + this.h/2);
+        //this.camera.moveCenterTo(this.x + this.w/2, this.y + this.h/2, 2.0);
+        this.camera.setCenter(this.x + this.w/2, this.y + this.h/2);
     }
 }

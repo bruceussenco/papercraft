@@ -1,0 +1,1 @@
+- fix a bug that happens when camera move outside of world or, maybe, when the camera reaches the player.
