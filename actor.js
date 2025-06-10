@@ -34,7 +34,7 @@ class Actor extends AABBRect {
 
     applyGravity() {
         this.velY += GRAVITY;
-        this.velY = Math.min(this.velY, MAX_GRAVITY);
+        this.velY = Math.min(this.velY, MAX_FALL_SPEED);
     }
 
     jump() {
