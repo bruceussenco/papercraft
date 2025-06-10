@@ -3,6 +3,7 @@ const lastDownKeys = new Map();
 
 const isKeyDown    = (key) => downKeys.get(key);
 const isKeyPressed = (key) => downKeys.get(key) && !lastDownKeys.get(key);
+const isKeyReleased = (key) => !downKeys.get(key) && lastDownKeys.get(key);
 
 document.addEventListener("keydown", onKeyDown);
 function onKeyDown(e) {

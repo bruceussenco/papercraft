@@ -1,5 +1,6 @@
 class Actor extends AABBRect {
     isOnGround = false;
+    isJumping  = false;
     constructor(x, y, w, h, speed, jumpForce) {
         super(x, y, w, h);
 
@@ -11,6 +12,8 @@ class Actor extends AABBRect {
 
     update() {
         this.updateGroundChecker();
+
+        if (this.isJumping && this.velY >= 0) this.isJumping = false;
     }
 
     updateGroundChecker() {
@@ -35,7 +38,15 @@ class Actor extends AABBRect {
     }
 
     jump() {
+        this.isJumping = true;
         this.velY = -this.jumpForce;
+    }
+
+    cancelJump() {
+        if (this.isJumping) {
+            this.isJumping = false;
+            this.velY *= 0.5;
+        }
     }
 
     isInChunk(i, j) {

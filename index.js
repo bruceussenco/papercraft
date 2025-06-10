@@ -51,6 +51,8 @@ function update(dt) {
         player.applyGravity();
         if (jump && player.isOnGround) player.jump();
         player.velX = moveX * player.speed;
+
+        if (isKeyReleased(KEY_W) || isKeyReleased(KEY_SPACE)) player.cancelJump();
     }
 
     // check mouse //
