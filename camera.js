@@ -2,7 +2,8 @@ class Camera {
     w = screenWidth;
     h = screenHeight;
 
-    moveOffset = 10;
+    widthOffset  = 100;
+    heightOffset =  60;
 
     // to use only int number to position
     xRemainder = 0;
@@ -15,11 +16,17 @@ class Camera {
     debugRender(ctx) {
         ctx.save();
         ctx.strokeStyle = "#e3d";
-        // move
-        ctx.beginPath();
-        ctx.arc(this.x + this.w/2, this.y + this.h/2, this.moveOffset, 0, 2 * Math.PI);
-        ctx.stroke();
+        // offset
+        ctx.strokeRect(
+            this.x + (this.w - this.widthOffset)/2,
+            this.y + (this.h - this.heightOffset)/2,
+            this.widthOffset, this.heightOffset
+        );
         ctx.restore();
+    }
+
+    getCenter() {
+        return {x: this.x + this.w/2, y: this.y + this.h/2};
     }
 
     setCenter(x, y) {
@@ -29,19 +36,22 @@ class Camera {
     }
 
     moveCenterTo(destX, destY, speed) {
-        let dirX = (destX - this.w/2) - this.x;
-        let dirY = (destY - this.h/2) - this.y;
+        const camCenter = this.getCenter();
+
+        let moveHorz = destX < camCenter.x -  this.widthOffset/2 ||
+                       destX > camCenter.x +  this.widthOffset/2;
+        let moveVert = destY < camCenter.y - this.heightOffset/2 ||
+                       destY > camCenter.y + this.heightOffset/2;
+
+        if (!moveHorz && !moveVert) return;
+
+        let dirX = destX - this.w/2 - this.x;
+        let dirY = destY - this.h/2 - this.y;
 
         const dist = Math.sqrt(dirX**2 + dirY**2);
 
-        if (dist <= this.moveOffset) return;
-
-        // normalize
-        dirX /= dist;
-        dirY /= dist;
-        
-        const newX = this.x + this.xRemainder + dirX * speed;
-        const newY = this.y + this.yRemainder + dirY * speed;
+        const newX = this.x + this.xRemainder + dirX/dist * speed;
+        const newY = this.y + this.yRemainder + dirY/dist * speed;
 
         this.x = Math.floor(newX);
         this.y = Math.floor(newY);
