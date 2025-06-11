@@ -1,1 +1,3 @@
-- fix the a moveCenterTo bug from Camera
+- fix camera moving
+  - info: when camera is in the world border it move slowly down
+  - make it dont move vertically if vertical dist is small, same for horizontal

@@ -22,6 +22,8 @@ class Camera {
 
         const dist = Math.sqrt(dirX**2 + dirY**2);
 
+        if (dist <= 10) return;
+
         // normalize
         dirX /= dist;
         dirY /= dist;
