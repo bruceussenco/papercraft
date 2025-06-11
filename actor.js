@@ -175,4 +175,19 @@ class Actor extends AABBRect {
            }
         }
     }
+
+    render(ctx) {
+        ctx.fillStyle = "#22f"; ctx.strokeStyle = "#000";
+        ctx.fillRect(this.x, this.y, this.w, this.h);
+        ctx.strokeRect(this.x, this.y, this.w, this.h);
+    }
+
+    debugRender(ctx) {
+        if (this.isOnGround) ctx.fillStyle = "red";
+        else                 ctx.fillStyle = "lime";
+        ctx.fillRect(
+            this.groundChecker.x, this.groundChecker.y,
+            this.groundChecker.w, this.groundChecker.h
+        );
+    }
 }

@@ -84,7 +84,8 @@ function render(camera) {
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
     renderChunks(ctx, chunks, camera);
-    renderPlayer();
+    player.render(ctx);
+    player.debugRender(ctx);
 
     /* tile marker */ {
         // chunk/tile on cursor
@@ -108,19 +109,6 @@ function render(camera) {
 function renderBg() {
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-function renderPlayer() {
-    ctx.fillStyle = "#2222ff"; ctx.strokeStyle = "#000000";
-    ctx.fillRect(player.x, player.y, player.w, player.h);
-    ctx.strokeRect(player.x, player.y, player.w, player.h);
-
-    // ground checker
-    if (player.isOnGround) ctx.fillStyle = "red";
-    else                   ctx.fillStyle = "lime";
-    ctx.fillRect(
-        player.groundChecker.x, player.groundChecker.y,
-        player.groundChecker.w, player.groundChecker.h
-    );
 }
 function showFPS(fps) {
     ctx.font = "20px Arial";
