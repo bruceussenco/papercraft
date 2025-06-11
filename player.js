@@ -10,4 +10,9 @@ class Player extends Actor {
         this.camera.moveCenterTo(this.x + this.w/2, this.y + this.h/2, 2.0);
         //this.camera.setCenter(this.x + this.w/2, this.y + this.h/2);
     }
+
+    debugRender(ctx) {
+        super.debugRender(ctx);
+        this.camera.debugRender(ctx);
+    }
 }

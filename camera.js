@@ -2,12 +2,24 @@ class Camera {
     w = screenWidth;
     h = screenHeight;
 
+    moveOffset = 10;
+
     // to use only int number to position
     xRemainder = 0;
     yRemainder = 0;
     constructor(x, y) {
         this.x = x;
         this.y = y;
+    }
+    
+    debugRender(ctx) {
+        ctx.save();
+        ctx.strokeStyle = "#e3d";
+        // move
+        ctx.beginPath();
+        ctx.arc(this.x + this.w/2, this.y + this.h/2, this.moveOffset, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
     }
 
     setCenter(x, y) {
@@ -22,7 +34,7 @@ class Camera {
 
         const dist = Math.sqrt(dirX**2 + dirY**2);
 
-        if (dist <= 10) return;
+        if (dist <= this.moveOffset) return;
 
         // normalize
         dirX /= dist;
