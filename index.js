@@ -61,7 +61,8 @@ function update(dt) {
         const chunkIndex = tm.cj * worldChunksWidth + tm.ci;
         const tileIndex  = tm.tj * chunkTilesSize + tm.ti;
 
-        if (chunks[chunkIndex][tileIndex].id !== BLOCK_BEDROCK) {
+        if (chunkIndex < worldChunksCount &&
+            chunks[chunkIndex][tileIndex].id !== BLOCK_BEDROCK) {
             chunks[chunkIndex][tileIndex] = new Tile(BLOCK_AIR);
         }
     }
@@ -91,7 +92,8 @@ function render(camera) {
         const chunkIndex = tm.cj * worldChunksWidth + tm.ci;
         const tileIndex  = tm.tj * chunkTilesSize + tm.ti;
 
-        if (chunks[chunkIndex][tileIndex].id !== BLOCK_AIR) {
+        if (chunkIndex < worldChunksCount &&
+            chunks[chunkIndex][tileIndex].id !== BLOCK_AIR) {
             // global pos of tile
             const tgx = tm.ci * chunkSize + tm.ti * tileSize;
             const tgy = tm.cj * chunkSize + tm.tj * tileSize;
